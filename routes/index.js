@@ -4,7 +4,7 @@ const passport = require('passport')
 
 /* these are the index roues. */
 
-router.all()
+// router.all()
 
 router.get('/', (req, res, next) => {
   res.send('<h1>Welcome to our Home please log in.</h1>')
