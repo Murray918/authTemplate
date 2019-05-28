@@ -5,8 +5,9 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const passport = require('passport')
 
-//this is the users route
+//this is the index routes
 const index = require('./routes')
+const users = require('./Users/routes')
 
 //==> ==> ==> ==> CONFIGURATIONS <== <== <== <==
 // load the env vars
@@ -39,7 +40,8 @@ app.use(passport.initialize());
 //set passport to use sessions
 app.use(passport.session())
 
-app.use('/', index)  
+app.use('/', index)
+app.use('/users', users)  
 
 app.use(function(req, res) {
     res.status(404).send('Cant find that!');
