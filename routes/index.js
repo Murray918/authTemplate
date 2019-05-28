@@ -3,9 +3,6 @@ const router = express.Router();
 const passport = require('passport')
 
 /* these are the index roues. */
-
-// router.all()
-
 router.get('/', (req, res, next) => {
   res.send('<h1>Welcome to our Home please log in.</h1>')
 })
@@ -15,7 +12,6 @@ router.get('/home', (req, res, next) => {
   console.log('the session lookls like this : ', req.session)
   res.send('<h1>Welcome back to the party!</h1>')
 })
-
 
 router.get('/auth/google', passport.authenticate(
   'google',
@@ -30,6 +26,7 @@ router.get('/auth/google', passport.authenticate(
     failureRedirect : '/failedloginattempt'
   }
 ));
+
 
  // OAuth logout route
  router.get('/logout', function(req, res){
