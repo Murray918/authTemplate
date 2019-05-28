@@ -1,7 +1,5 @@
 const passport = require('passport')
 const { Strategy: GoogleStrategy } = require('passport-google-oauth20')
-//check that the strategy exists
-// console.log(GoogleStrategy)
 const User = require('../Users/Model')
 
 //==> ==> ==> ==> Configure <== <== <== <==
