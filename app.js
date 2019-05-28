@@ -5,10 +5,8 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const passport = require('passport')
 
-
-
 //this is the users route
-const users = require('./routes/users')
+const index = require('./routes')
 
 //==> ==> ==> ==> CONFIGURATIONS <== <== <== <==
 // load the env vars
@@ -23,12 +21,10 @@ require('./config/passport')
 const app = express()
 
 // ==> ==> ==> ==>  Middleware <== <== <== <==
-//set up body-parser
+//set up body-parser for req.body
 app.use(bodyParser.json())
+//set up body parser for urls
 app.use(bodyParser.urlencoded({ extended: false }))
-
-//setup cookie parser
-app.use(cookieParser())
 
 //set up the cookie session
 app.use(
@@ -43,6 +39,10 @@ app.use(passport.initialize());
 //set passport to use sessions
 app.use(passport.session())
 
-app.use('/api/v1/users', users)
+app.use('/', index)  
+
+app.use(function(req, res) {
+    res.status(404).send('Cant find that!');
+  });
 
 module.exports = app
