@@ -9,7 +9,7 @@ router.get('/', (req, res, next) => {
 
 router.get('/home', (req, res, next) => {
   console.log('the user is : ', req.user)
-  console.log('the session lookls like this : ', req.session)
+  console.log('the session looks like this : ', req.session)
   res.send('<h1>Welcome back to the party!</h1>')
 })
 
@@ -18,6 +18,14 @@ router.get('/auth/google', passport.authenticate(
   { scope: ['profile', 'email'] }
 ));
 
+router.get('/auth/twitter', passport.authenticate('twitter'))
+
+router.get('/auth/twitter/callback', passport.authenticate('twitter',
+{
+  successRedirect : '/user/profile',
+  failureRedirect : '/failedloginattempt'
+}
+))
  // Google OAuth callback route
  router.get('/oauth2callback', passport.authenticate(
   'google',
