@@ -15,6 +15,7 @@ require('dotenv').config()
 require('./config/database')
 //configure passport
 require('./config/passport')
+require('./config/twitter_passport')
 
 
 //initialize express
