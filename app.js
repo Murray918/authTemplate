@@ -40,7 +40,7 @@ app.use(passport.initialize());
 app.use(passport.session())
 
 app.use('/', index)
-app.use('/users', users)  
+app.use('/user', users)  
 
 app.use(function(req, res) {
     res.status(404).send('Cant find that!');
