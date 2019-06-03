@@ -12,7 +12,7 @@ const users = require('./Users/routes')
 // load the env vars
 require('dotenv').config()
 //connect to mongodb
-require('./config/database')
+require('./config/mongo')
 //configure passport
 require('./config/passport')
 
