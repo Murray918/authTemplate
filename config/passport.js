@@ -22,8 +22,7 @@ passport.use(
 					googleId: profile.id
 				})
 				const condition = { googleId: profile.id }
-
-				const user = await User.findOneOrCreate(condition, newUser)
+				const user = await User.findOrCreate(condition, newUser)
 				return cb(null, user)
 			} catch (error) {
 				cb(error)
@@ -51,7 +50,7 @@ passport.use(
 
 				condition = { twitterId: profile.id }
 
-				const user = await User.findOneOrCreate(condition, newUser)
+				const user = await User.findOrCreate(condition, newUser)
 				return cb(null, user)
 			} catch (error) {
 				cb(error)
