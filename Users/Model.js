@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const bycrypt = require('bcrypt')
 
 const userSchema = new Schema(
 	{
@@ -8,12 +9,21 @@ const userSchema = new Schema(
 		created_at: Date,
 		avatar: String,
 		googleId: String,
-		twitterId: String
+		twitterId: String,
+		hashedpassword: String
 	},
 	{
 		timestamps: true
 	}
 )
+
+userSchema.methods.validPassword = (pw) => {
+	return bycrypt.compareSync(pw, this.hashedpassword)
+}
+
+userSchema.virtual('password').set((val) => {
+	this.hashedpassword = bycrypt.hashSync(val, 12)
+})
 
 userSchema.statics.findOrCreate = async function (condition, doc) {
 	const self = this
