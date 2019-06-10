@@ -1,0 +1,35 @@
+
+create these methods for the postgres promise library so that this can be used for sql or mongoose 
+
+Model.deleteMany(...CONDITION) => DELETE FROM Model WHERE [...CONDITION]
+    this function deletes all items that from the model that meets its conditions
+        @
+
+Model.deleteOne(...CONDITION) => DELETE FROM table WHERE [...CONDITION]
+    this function needs to take two parameters
+        @...condition must be a set of variables or expressions
+        @RETURN returns deleted item as a promise
+
+Model.find() => SELECT * FROM Model
+    this function returns the contents of the table
+        @RETURN the contents of the query as a promise
+
+Model.findById(PRIMARY_KEY) => SELECT table FROM var WHERE [PRIMARY_KEY]
+    this function finds an item from a table where the id
+        @PRIMARY_KEY this must be a primary key of the table you querying
+
+Model.findByIdAndDelete([PRIMARY_KEY]) => SELECT FROM Model
+    this function finds a row buy its primary key and deletes it
+        @PRIMARY_KEY this is the primary key of the table
+
+Model.findByIdAndRemove(PRIMARY_KEY) => DELETE FROM Model WHERE [PRIMARY_KEY]
+
+
+Model.findByIdAndUpdate()
+Model.findOne()
+Model.findOneAndDelete()
+Model.findOneAndRemove()
+Model.findOneAndUpdate()
+Model.replaceOne()
+Model.updateMany()
+Model.updateOne()
