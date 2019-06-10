@@ -1,88 +1,68 @@
-const Note = require('../models/note');
+const db = require('../config/database');
 
 module.exports = {
-    index,
-    show,
-    error,
+    find,
+    findById,
     create,
-    remove,
-    edit,
-    update,
-    new: newNote
+    findByIdAndDelete,
+    findByIdAndUpdate
 };
 
-async function index(req, res) {
+async function find() {
     try {
-        const notes = await Note.find({})
-        res.render('index', { 
-            title: 'Welcome to NoteApp',
-            notes 
-        });
+        const notes = await db.query(`
+        SELECT * FROM users`);
+        return notes;
     } catch (error) {
-        res.redirect('/error');
+        return error;
     }
 }
 
-async function show(req, res) {
+async function findById(id) {
     try {
-        const note = await Note.findById(req.params.id)
-        res.render('show', {
-            title: `Details for: ${note.title}`,
-            note
-        });
+        const note = await db.one(`
+        SELECT * 
+        FROM users
+        WHERE user_id = $1`, id);
+        return note;
     } catch (error) {
-        res.redirect('/error');
+        return error;
     }
 }
 
-async function create(req, res) {
+async function create({ title, body }) {
     try {
-        await Note.create(req.body);
-        res.redirect('/');
+        const note = await db.one(`
+        INSERT INTO users(username, user_id)
+        VALUES($1, $2) RETURNING *`, 
+        [title,body]);
+        return note;
     } catch (error) {
-        res.redirect('/error');
+        return error;
     }
 }
 
-async function remove(req, res) {
+async function findByIdAndDelete(id) {
     try {
-        await Note.findByIdAndDelete(req.params.id);
-        res.redirect('/');
+        const deletedNote = db.one(`
+        DELETE FROM users
+        WHERE user_id = $1
+        RETURNING *`, id);
+        return deletedNote;
     } catch (error) {
-        res.redirect('/error');
+        return error;
     }
 }
 
-async function edit(req, res) {
+async function findByIdAndUpdate(id, {title, body}) {
     try {
-        const note = await Note.findById(req.params.id)
-        res.render('edit', {
-            title: `Edit details of: ${note.title}`,
-            note
-        });
+        const updatedNote = db.one(`
+        UPDATE users
+        SET title = $1, body = $2
+        WHERE user_id = $3
+        RETURNING *`, [title, body, id]);
+        return updatedNote;
     } catch (error) {
-        res.redirect('/error');
+        return error;
     }
-}
-
-async function update(req, res) {
-    try {
-        const note = await Note.findByIdAndUpdate(req.params.id, req.body);
-        res.redirect(`/notes/${req.params.id}`);
-    } catch (error) {
-        res.redirect('/error');
-    }
-}
-
-function newNote(req, res) {
-    res.render('new', {
-        title: 'Create a New Note'
-    });
-}
-
-
-function error(req, res) {
-    res.render('error', {
-        title: 'Something Went Wrong'
-    });
 }
