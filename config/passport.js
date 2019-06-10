@@ -50,34 +50,34 @@ passport.use(
 	)
 )
 
-// passport.use(
-// 	//==> ==> ==> ==> TWITTER Strategy <== <== <== <==
-// 	new TwitterStrategy(
-// 		{
-// 			consumerKey: process.env.TWITTER_CONSUMER_KEY,
-// 			consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
-// 			callbackURL: process.env.TWITTER_CALLBACK_URL
-// 		},
-// 		async (accessToken, refreshToken, profile, cb) => {
-// 			// a user has logged in with OAuth...
-// 			//look to see if we have a user that matches the profile.id
-// 			try {
-// 				const newUser = new User({
-// 					name: profile.displayName,
-// 					email: profile.email,
-// 					twitterId: profile.id
-// 				})
+passport.use(
+	//==> ==> ==> ==> TWITTER Strategy <== <== <== <==
+	new TwitterStrategy(
+		{
+			consumerKey: process.env.TWITTER_CONSUMER_KEY,
+			consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
+			callbackURL: process.env.TWITTER_CALLBACK_URL
+		},
+		async (accessToken, refreshToken, profile, cb) => {
+			// a user has logged in with OAuth...
+			//look to see if we have a user that matches the profile.id
+			try {
+				const newUser = new User({
+					name: profile.displayName,
+					email: profile.email,
+					twitterId: profile.id
+				})
 
-// 				condition = { twitterId: profile.id }
+				condition = { twitterId: profile.id }
 
-// 				const user = await User.findOrCreate(condition, newUser)
-// 				return cb(null, user)
-// 			} catch (error) {
-// 				cb(error)
-// 			}
-// 		}
-// 	)
-// )
+				const user = await User.findOrCreate(condition, newUser)
+				return cb(null, user)
+			} catch (error) {
+				cb(error)
+			}
+		}
+	)
+)
 
 //serialize the User
 passport.serializeUser(function(user, done) {
