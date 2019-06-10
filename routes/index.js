@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const passport = require('passport')
+const passport = require('passport');
+const User = require('../Users/Model');
 
 /* these are the index roues. */
 router.get('/', (req, res, next) => {
@@ -13,6 +14,48 @@ router.get('/home', (req, res, next) => {
   console.log('the session looks like this : ', req.session)
   res.send('<h1>Welcome back to the party!</h1>')
 })
+
+
+// ==> ==> ==> ==> Local auth routes <== <== <== <== 
+
+// register as new user
+router.post('/register', (req, res, next) => {
+  // destructure fields from req.body
+  const {
+    firstName,
+    lastName,
+    username,
+    email,
+    password
+  } = req.body
+
+  // combine first/last names to single string based on current model format
+  // TODO: Is there a more meaniful way to handle this? Perhaps a "profile" model for this info?
+
+  const name = `${firstName} ${lastName}`
+
+  User.create({
+    username,
+    name,
+    email,
+    password
+  })
+  .then(user => {
+    req.login(user, err => {
+      if(err) next(err)
+      else res.redirect('/home')
+    })
+  })
+  .catch(err => res.redirect('/failedloginattempt'))
+})
+// login route 
+
+router.post('/auth/local', passport.authenticate('local', {
+  successRedirect: '/home',
+  failureRedirect: '/failedloginattempt',
+  failureFlash: true
+}))
+
 
 // ==> ==> ==> ==> GOOGLE auth routes <== <== <== <== 
 //login route
