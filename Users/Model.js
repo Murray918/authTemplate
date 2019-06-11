@@ -1,4 +1,5 @@
 const { Schema, model } = require('mongoose')
+const bycrypt = require('bcrypt')
 
 const userSchema = new Schema(
 	{
@@ -8,37 +9,38 @@ const userSchema = new Schema(
 		created_at: Date,
 		avatar: String,
 		googleId: String,
-		twitterId: String
+		twitterId: String,
+		hashedpassword: String
 	},
 	{
 		timestamps: true
 	}
 )
 
+userSchema.methods.validPassword = (pw) => {
+	return bycrypt.compareSync(pw, this.hashedpassword)
+}
 
-userSchema.statics.findOneOrCreate = function findOneOrCreate(condition, doc) {
+userSchema.virtual('password').set((val) => {
+	this.hashedpassword = bycrypt.hashSync(val, 12)
+})
+
+userSchema.statics.findOrCreate = async function (condition, doc) {
 	const self = this
 	const newDocument = doc
-	return new Promise((resolve, reject) => {
-		return self
-			.findOne(condition)
-			.then(result => {
-				if (result) {
-					return resolve(result)
-				}
-				return self
-					.create(newDocument)
-					.then(result => {
-						return resolve(result)
-					})
-					.catch(error => {
-						return reject(error)
-					})
-			})
-			.catch(error => {
-				return reject(error)
-			})
-	})
+	try {
+		const found = await self.findOne(condition)
+		if (!!found) {
+			return found
+		} else {
+			const created = self.create(newDocument)
+			return created
+		}
+	} catch (error) {
+		console.error(error)
+		return error
+
+	}
 }
 
 module.exports = model('Users', userSchema)
