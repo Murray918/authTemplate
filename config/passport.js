@@ -3,9 +3,28 @@ const User = require('../Users/Model')
 
 const { Strategy: GoogleStrategy } = require('passport-google-oauth20')
 const { Strategy: TwitterStrategy } = require('passport-twitter')
+const { Strategy: LocalStrategy } = require('passport-local')
+
 //==> ==> ==> ==> Configure <== <== <== <==
 // tell passport to use the credentials we have supplied in our .env file
+
 passport.use(
+	//==> ==> ==> ==> LOCAL Strategy <== <== <== <==
+	new LocalStrategy(
+		async (username, password, cb) => {
+			try {
+				const user = await User.findOne({ username })
+				if(!user || !user.validPassword(password)) {
+					cb(null, false, { message: 'Invalid Password'})
+				} else cb(null, user)
+			} catch (error) {
+				return cb(error)
+			}
+		}
+	)
+)
+
+passport.use( 
 	//==> ==> ==> ==> GOOGLE Strategy <== <== <== <==
 	new GoogleStrategy(
 		{
@@ -32,6 +51,7 @@ passport.use(
 )
 
 passport.use(
+	//==> ==> ==> ==> TWITTER Strategy <== <== <== <==
 	new TwitterStrategy(
 		{
 			consumerKey: process.env.TWITTER_CONSUMER_KEY,
