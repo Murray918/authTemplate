@@ -3,13 +3,14 @@ const { path } = require("path")
 
 module.exports = {
   // here we can use SQL files to generate our methods for users
-  users: {
+  Users: {
     create: sql("Users/create.sql"),
     find: sql("Users/find.sql"),
     empty: sql("Users/empty.sql"),
     init: sql("Users/init.sql"),
     drop: sql("Users/drop.sql"),
-    add: sql("Users/add.sql")
+    add: sql("Users/add.sql"),
+    findOrCreate: sql("Users/findOrCreate.sql")
   }
 }
 
