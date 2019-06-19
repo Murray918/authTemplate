@@ -1,5 +1,5 @@
 const passport = require('passport')
-const User = require('../Users/Model')
+const User = require('../Users/Model') || require('sql')
 
 const { Strategy: GoogleStrategy } = require('passport-google-oauth20')
 const { Strategy: TwitterStrategy } = require('passport-twitter')
@@ -13,7 +13,8 @@ passport.use(
 	new LocalStrategy(
 		async (username, password, cb) => {
 			try {
-				const user = await User.findOne({ username })
+				const user = await User.findOne({ username })//?
+				console.log(user) //?
 				if(!user || !user.validPassword(password)) {
 					cb(null, false, { message: 'Invalid Password'})
 				} else cb(null, user)
