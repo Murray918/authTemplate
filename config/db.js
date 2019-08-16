@@ -1,34 +1,41 @@
-//TODO in this file we want to basically be able to switch the database based on a variable in the .env file. This variable is must be called DATABASE_TYPE. Ideally we would just export this file into the app.js and that is how you would set up the database. We will see how that goes. I am keeping this in Users for now however some of the logic might make sense to move into the config.
+/*
+ * This is the database connection config. 
+ * You must set a variable in the .env of DB_TYPE
+ * connectToDb is a function that connects to the database of  choice
+ * @ param dbVariable : String Which database to connect to
+ * It will then export the database as a module
+ */
 
 const connectToDb = dbVariable => {
-  //==> ==> ==> ==> Mongoose <== <== <== <==
-  if (dbVariable === "mongo") {
-    // require the mongoose module
-    const mongoose = require("mongoose")
+	//***************** Mongoose ***************/ 
+	if (dbVariable === 'mongo') {
+		// require the mongoose module
+		const mongoose = require('mongoose')
 
-    //connect to mongoose
-    mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
+		//connect to mongoose
+		mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true })
 
-    //print a message on connection
-    mongoose.connection.on("connected", () =>
-      console.log(`Mongoose connected to: ${process.env.DATABASE_URL}`)
-    )
-    module.exports = mongoose
+		//print a message on connection
+		mongoose.connection.on('connected', () =>
+			console.log(`Mongoose connected to: ${process.env.DATABASE_URL}`)
+		)
+		module.exports = mongoose
 
-    //==> ==> ==> ==> SQL <== <== <== <==
-  } else if (dbVariable === "postgres") {
-    const options = {
-      query: e => {
-        console.log(e.query)``
-      }
-    }
-
-    const pgp = require("pg-promise")(options)
-
+	} else if (dbVariable === 'postgres') {
+		//************** Postgres ***************/
+		const options = {
+			query: e => {
+				console.log(e.query)
+				``
+			}
+		}
+		//compose our database connection
+		const pgp = require('pg-promise')(options)
+	
     module.exports = pgp(
-      process.env.DATABASE_URL || "postgres://muhr:localhost:5432/noteapp"
+      process.env.DATABASE_URL || "postgres://muhr:localhost:5432/auth-template"
     )
-  }
+	}
 }
-//we can call this function with an environment variable that we can set in the .env file
+
 connectToDb(process.env.DB_TYPE)

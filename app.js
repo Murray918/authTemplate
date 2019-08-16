@@ -1,5 +1,5 @@
 const express = require('express')
-const path = require('path')
+// const path = require('path')
 const bodyParser = require('body-parser')
 const session = require('express-session')
 const passport = require('passport')
@@ -15,7 +15,6 @@ require('dotenv').config()
 require('./config/db')
 //configure passport
 require('./config/passport')
-
 
 //initialize express
 const app = express()
